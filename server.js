@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// const bill = require('./routes/api/bill');
+const bill = require('./api/bill');
 
 //body-parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,14 +15,14 @@ app.use(bodyParser.json());
 const db = require('./config/keys').mongoURI;
 
 //Connect to MongoDB
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB Connected'))
     .catch(err => console.log(err));
 
 //app.get('/', (req, res) => res.send('Hello World'));
 
 //use routes
-// app.use('/api/bill', bill);
+app.use('/api/bill', bill);
 
 const port = 5000;
 
