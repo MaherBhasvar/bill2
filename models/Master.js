@@ -35,6 +35,10 @@ const MasterSchema = new Schema({
         type: String,
         // required: true
     },
+    fax_no: {
+        type: String,
+        // required: true
+    },
     gst_no: {
         type: String,
         // required: true
