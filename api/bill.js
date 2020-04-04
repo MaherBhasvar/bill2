@@ -35,4 +35,18 @@ router.post('/master', (req, res) => {
     })
 })
 
+// POST api/bill/masterDashboard
+// create master entries
+// Public
+router.get('/masterDashboard', (req, res) => {
+    Master.find()
+        .then(all => {
+            return res.json(all)
+        })
+        .catch(err => {
+            console.log("Error Master Dashboard", err)
+            return res.status(400).json(err)
+        })
+})
+
 module.exports = router

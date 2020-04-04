@@ -1,33 +1,63 @@
 import React, { Component } from 'react'
+import axios from 'axios';
+
 
 class AccountMaster extends Component {
 
+
+
     state = {
-        acc_name: "",
-        grp_name: "",
-        op_balance: "",
+        acc_name: "1",
+        grp_name: "1",
+        op_balance: "1",
         op_balance_type: "Credit",
         op_balance_type_options: [
             { label: "Credit", value: "Credit", checked: true },
             { label: "Debit", value: "Debit", checked: false }
         ],
-        address: "",
-        city: "",
-        pin_code: "",
-        phone_no: "",
-        gst_no: "",
-        cst_no: "",
-        pur_order_no: "",
+        address: "1",
+        city: "1",
+        pin_code: "1",
+        phone_no: "1",
+        fax_no: "1",
+        gst_no: "1",
+        cst_no: "1",
+        pur_order_no: "1",
         pur_order_date: new Date(),
-        supp_code: "",
-        conn_ac: false
+        supp_code: "1",
+        conn_ac: false,
+        displaySuccess: false,
+        displayError: false,
+        error: ''
     }
 
     onSubmit = e => {
         e.preventDefault()
         const userData = {
-            ...this.state
+            acc_name: this.state.acc_name,
+            grp_name: this.state.grp_name,
+            op_balance: this.state.op_balance,
+            op_balance_type: this.state.op_balance_type,
+            address: this.state.address,
+            city: this.state.city,
+            pin_code: this.state.pin_code,
+            phone_no: this.state.phone_no,
+            fax_no: this.state.fax_no,
+            gst_no: this.state.gst_no,
+            cst_no: this.state.cst_no,
+            pur_order_no: this.state.pur_order_no,
+            pur_order_date: this.state.pur_order_date,
+            supp_code: this.state.supp_code,
+            conn_ac: this.state.conn_ac
         }
+
+        axios.post('./api/bill/master', userData)
+            .then(res => this.setState({ displaySuccess: true }))
+            .catch(err => this.setState({
+                displayError: true,
+                error: err.toString()
+            }))
+
     }
 
     onChange = e => {
@@ -62,6 +92,8 @@ class AccountMaster extends Component {
     render() {
         return (
             <div>
+                {this.state.displaySuccess == true ? <h5>Successfully sent</h5> : <h5></h5>}
+                {this.state.displayError == true ? <h5>Unsuccessful Pls Try again, Error: {this.state.error}</h5> : <h5></h5>}
                 <form onSubmit={e => this.onSubmit(e)}>
                     <table>
                         <tr>
@@ -81,7 +113,7 @@ class AccountMaster extends Component {
                             <td> {this.state.op_balance_type_options.map(each => {
                                 return (
                                     <span key={each.value}>
-                                        <input type="radio" name="op_balance_type" value={each.value} onChange={e => this.onChange(e)} /> <label>{each.label}</label>
+                                        <input type="radio" name="op_balance_type" value={each.value} onChange={e => this.onChange(e)} checked={each.checked} /> <label>{each.label}</label>
                                     </span>
                                 )
                             })} </td>
@@ -102,6 +134,10 @@ class AccountMaster extends Component {
                         <tr>
                             <td><label>Phone Number</label></td>
                             <td><input type="text" name="phone_no" value={this.state.phone_no} onChange={e => this.onChange(e)} /></td>
+                        </tr>
+                        <tr>
+                            <td><label>Fax Number</label></td>
+                            <td><input type="text" name="fax_no" value={this.state.fax_no} onChange={e => this.onChange(e)} /></td>
                         </tr>
                         <tr>
                             <td><label>GST Number</label></td>
@@ -128,6 +164,7 @@ class AccountMaster extends Component {
                             <td><input type="checkbox" name="conn_ac" value={this.state.conn_ac} onChange={e => this.onChange(e)} checked={this.state.conn_ac} /></td>
                         </tr>
                     </table>
+                    <input type="submit" onClick={e => this.onSubmit(e)} />
                 </form>
             </div>
         )
